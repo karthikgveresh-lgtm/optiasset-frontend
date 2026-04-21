@@ -22,7 +22,7 @@ export default function DashboardPage() {
     const fetchStats = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-        const response = await fetch(`${apiUrl}/api/dashboard/stats`);
+        const response = await fetch(`${apiUrl}/api/dashboard/stats/`);
         if (response.ok) {
           const data = await response.json();
           setStats(data);
