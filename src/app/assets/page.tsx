@@ -94,9 +94,7 @@ export default function AssetsPage() {
         </div>
 
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="lg" className="shadow-lg">+ Add New Asset</Button>
-          </DialogTrigger>
+          <DialogTrigger render={<Button size="lg" className="shadow-lg">+ Add New Asset</Button>} />
           <DialogContent className="sm:max-w-[425px]">
             <form onSubmit={handleSubmit}>
               <DialogHeader>
