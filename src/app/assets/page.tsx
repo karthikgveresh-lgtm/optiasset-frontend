@@ -25,12 +25,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Asset {
   id: number;
-  asset_tag: str;
-  name: str;
-  category: str;
-  serial_number?: str;
-  status: str;
-  created_at: str;
+  asset_tag: string;
+  name: string;
+  category: string;
+  serial_number?: string;
+  status: string;
+  created_at: string;
 }
 
 export default function AssetsPage() {
