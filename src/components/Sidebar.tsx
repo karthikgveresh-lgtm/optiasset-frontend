@@ -8,7 +8,7 @@ export function Sidebar() {
   const { role, permissions } = useAuth();
 
   return (
-    <div className="flex h-screen w-64 flex-col border-r bg-background px-4 py-6">
+    <div className="flex h-screen w-64 flex-col border-r border-white/5 bg-sidebar/50 backdrop-blur-xl px-4 py-6 shadow-2xl">
       <div className="mb-8 px-2 text-xl font-bold tracking-tight text-primary">
         OptiAsset Pro
       </div>
