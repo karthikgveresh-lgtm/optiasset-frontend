@@ -52,9 +52,9 @@ export default function MyGearPage() {
         <p className="text-muted-foreground">Review and manage the company assets currently assigned to you.</p>
       </div>
 
-      <Card className="shadow-lg border-primary/10">
-        <CardHeader className="bg-muted/30 border-b">
-          <CardTitle className="text-lg">Currently Assigned</CardTitle>
+      <Card className="shadow-2xl border-emerald-500/20 bg-emerald-500/5 backdrop-blur-md">
+        <CardHeader className="bg-emerald-500/10 border-b border-emerald-500/20">
+          <CardTitle className="text-lg text-emerald-400">Currently Assigned</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
