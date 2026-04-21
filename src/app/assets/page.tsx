@@ -71,7 +71,10 @@ export default function AssetsPage() {
     try {
       const response = await fetch(`${apiUrl}/api/assets`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": "Bearer 1" // Mock Admin ID
+        },
         body: JSON.stringify(formData),
       });
 
