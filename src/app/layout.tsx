@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={inter.className}>
         <AuthProvider>
-          <div className="flex h-screen bg-background text-foreground transition-colors duration-300">
+          <div className="flex h-screen text-foreground transition-colors duration-300">
             <Sidebar />
             <main className="flex-1 overflow-y-auto p-8">
               {children}
