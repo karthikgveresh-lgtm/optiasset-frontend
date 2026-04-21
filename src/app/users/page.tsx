@@ -133,7 +133,9 @@ export default function UsersPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" className="w-full">Create Profile</Button>
+                <Button type="button" onClick={handleSubmit} className="w-full shadow-md">
+                  Create Profile
+                </Button>
               </DialogFooter>
             </form>
           </DialogContent>

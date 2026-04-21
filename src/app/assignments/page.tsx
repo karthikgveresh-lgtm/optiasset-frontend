@@ -121,7 +121,9 @@ export default function AssignmentsPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" className="w-full">Deploy Asset</Button>
+                <Button type="button" onClick={handleSubmit} className="w-full shadow-md">
+                  Deploy Asset
+                </Button>
               </DialogFooter>
             </form>
           </DialogContent>

@@ -144,7 +144,9 @@ export default function AssetsPage() {
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" className="w-full">Save Asset</Button>
+                <Button type="button" onClick={handleSubmit} className="w-full shadow-md">
+                  Save Asset
+                </Button>
               </DialogFooter>
             </form>
           </DialogContent>
