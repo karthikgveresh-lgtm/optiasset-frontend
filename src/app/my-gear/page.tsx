@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -19,18 +20,24 @@ interface Assignment {
 }
 
 export default function MyGearPage() {
+  const { role } = useAuth();
   const [gear, setGear] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
 
   let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
   apiUrl = apiUrl.replace("http://", "https://").replace(/\/$/, "");
-  const MOCK_EMPLOYEE_ID = 2; // John Doe
+  
+  // DYNAMIC ID based on role
+  // Admin (Karthik) = ID 1
+  // Employee (Jane) = ID 2
+  const currentId = role === "Admin" ? 1 : 2;
 
   useEffect(() => {
     const fetchMyGear = async () => {
+      setLoading(true);
       try {
-        const response = await fetch(`${apiUrl}/api/dashboard/personal-assignments/${MOCK_EMPLOYEE_ID}/`, {
-          headers: { "Authorization": "Bearer 2" }
+        const response = await fetch(`${apiUrl}/api/dashboard/personal-assignments/${currentId}/`, {
+          headers: { "Authorization": `Bearer ${currentId}` }
         });
         if (response.ok) {
           const data = await response.json();
@@ -44,13 +51,13 @@ export default function MyGearPage() {
     };
 
     fetchMyGear();
-  }, []);
+  }, [role, currentId]); // Refetch when role changes!
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight text-white">My Equipment</h1>
-        <p className="text-white/60">Review and manage the company assets currently assigned to you.</p>
+        <p className="text-white/60">Viewing assets for: <span className="text-white font-bold">{role === "Admin" ? "Karthik (Admin)" : "Jane (Employee)"}</span></p>
       </div>
 
       <Card className="bg-black/20 backdrop-blur-md border-white/10 shadow-2xl overflow-hidden">
@@ -73,7 +80,7 @@ export default function MyGearPage() {
               ) : gear.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={4} className="h-32 text-center">
-                    <p className="font-medium text-white/40">No gear assigned yet.</p>
+                    <p className="font-medium text-white/40">No gear assigned to this profile.</p>
                   </TableCell>
                 </TableRow>
               ) : (
