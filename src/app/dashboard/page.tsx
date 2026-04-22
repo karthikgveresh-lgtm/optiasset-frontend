@@ -34,7 +34,7 @@ export default function DashboardPage() {
         // FORCE HTTPS and REMOVE TRAILING SLASH
         apiUrl = apiUrl.replace("http://", "https://").replace(/\/$/, "");
 
-        const response = await fetch(`${apiUrl}/api/dashboard/stats`, {
+        const response = await fetch(`${apiUrl}/api/dashboard/stats/`, {
            headers: { "Authorization": "Bearer 1" }
         });
         
