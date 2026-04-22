@@ -13,7 +13,7 @@ import {
 
 interface Assignment {
   id: number;
-  asset_id: number;
+  asset: { name: string; asset_tag: string };
   assignment_date: string;
   status: string;
 }
@@ -23,13 +23,13 @@ export default function MyGearPage() {
   const [loading, setLoading] = useState(true);
 
   let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-  if (apiUrl.includes("railway.app")) apiUrl = apiUrl.replace("http://", "https://");
-  const MOCK_EMPLOYEE_ID = 2; // John Doe (from our seed script)
+  apiUrl = apiUrl.replace("http://", "https://").replace(/\/$/, "");
+  const MOCK_EMPLOYEE_ID = 2; // John Doe
 
   useEffect(() => {
     const fetchMyGear = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/employees/${MOCK_EMPLOYEE_ID}/assignments/`, {
+        const response = await fetch(`${apiUrl}/api/dashboard/personal-assignments/${MOCK_EMPLOYEE_ID}/`, {
           headers: { "Authorization": "Bearer 2" }
         });
         if (response.ok) {
@@ -49,48 +49,43 @@ export default function MyGearPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">My Equipment</h1>
-        <p className="text-muted-foreground">Review and manage the company assets currently assigned to you.</p>
+        <h1 className="text-3xl font-bold tracking-tight text-white">My Equipment</h1>
+        <p className="text-white/60">Review and manage the company assets currently assigned to you.</p>
       </div>
 
-      <Card className="shadow-2xl border-emerald-500/20 bg-emerald-500/5 backdrop-blur-md">
-        <CardHeader className="bg-emerald-500/10 border-b border-emerald-500/20">
-          <CardTitle className="text-lg text-emerald-400">Currently Assigned</CardTitle>
+      <Card className="bg-black/20 backdrop-blur-md border-white/10 shadow-2xl overflow-hidden">
+        <CardHeader className="bg-white/5 border-b border-white/10">
+          <CardTitle className="text-lg text-white">Currently Assigned</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Asset ID</TableHead>
-                <TableHead>Assigned On</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Action</TableHead>
+              <TableRow className="border-white/10">
+                <TableHead className="text-white/80">Asset Tag</TableHead>
+                <TableHead className="text-white/80">Name</TableHead>
+                <TableHead className="text-white/80">Assigned On</TableHead>
+                <TableHead className="text-white/80 text-right">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={4} className="h-24 text-center">Checking your records...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={4} className="h-24 text-center text-white/40">Checking your records...</TableCell></TableRow>
               ) : gear.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={4} className="h-32 text-center">
-                    <div className="flex flex-col items-center gap-1">
-                      <p className="font-medium text-muted-foreground">No gear assigned yet.</p>
-                      <p className="text-xs text-muted-foreground/60">Contact your IT Admin if you are missing equipment.</p>
-                    </div>
+                    <p className="font-medium text-white/40">No gear assigned yet.</p>
                   </TableCell>
                 </TableRow>
               ) : (
                 gear.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-bold">#ASSET-{item.asset_id}</TableCell>
-                    <TableCell>{item.assignment_date}</TableCell>
-                    <TableCell>
-                      <span className="px-2 py-1 rounded-full text-xs font-semibold bg-green-500/10 text-green-500">
+                  <TableRow key={item.id} className="border-white/5">
+                    <TableCell className="font-bold text-white">{item.asset.asset_tag}</TableCell>
+                    <TableCell className="text-white/90">{item.asset.name}</TableCell>
+                    <TableCell className="text-white/60">{item.assignment_date}</TableCell>
+                    <TableCell className="text-right">
+                      <span className="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-500/20 text-green-400">
                         {item.status}
                       </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <span className="text-xs text-blue-500 hover:underline cursor-pointer">Report Issue</span>
                     </TableCell>
                   </TableRow>
                 ))
