@@ -22,7 +22,8 @@ export default function MyGearPage() {
   const [gear, setGear] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  if (apiUrl.includes("railway.app")) apiUrl = apiUrl.replace("http://", "https://");
   const MOCK_EMPLOYEE_ID = 2; // John Doe (from our seed script)
 
   useEffect(() => {

@@ -19,9 +19,8 @@ export default function DashboardPage() {
 
   // Fetch real statistics from the live backend
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://localhost:8000";
+        let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        if (apiUrl.includes("railway.app")) apiUrl = apiUrl.replace("http://", "https://");
         const response = await fetch(`${apiUrl}/api/dashboard/stats`);
         if (response.ok) {
           const data = await response.json();

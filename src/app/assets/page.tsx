@@ -44,7 +44,8 @@ export default function AssetsPage() {
     serial_number: "",
   });
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://localhost:8000";
+  let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  if (apiUrl.includes("railway.app")) apiUrl = apiUrl.replace("http://", "https://");
 
   // Fetch assets from the backend
   const fetchAssets = async () => {

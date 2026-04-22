@@ -42,7 +42,8 @@ export default function AssignmentsPage() {
     assignment_date: new Date().toISOString().split('T')[0],
   });
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  if (apiUrl.includes("railway.app")) apiUrl = apiUrl.replace("http://", "https://");
 
   const fetchAssignments = async () => {
     try {

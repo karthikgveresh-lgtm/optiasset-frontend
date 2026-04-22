@@ -46,7 +46,8 @@ export default function UsersPage() {
     role_id: 2, // Default to Employee role
   });
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  if (apiUrl.includes("railway.app")) apiUrl = apiUrl.replace("http://", "https://");
 
   const fetchUsers = async () => {
     try {
