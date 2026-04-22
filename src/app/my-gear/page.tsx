@@ -28,7 +28,7 @@ export default function MyGearPage() {
   useEffect(() => {
     const fetchMyGear = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/employees/${MOCK_EMPLOYEE_ID}/assignments/`, {
+        const response = await fetch(`${apiUrl}/api/employees/${MOCK_EMPLOYEE_ID}/assignments`, {
           headers: { "Authorization": "Bearer 2" }
         });
         if (response.ok) {

@@ -50,7 +50,7 @@ export default function UsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/employees/`, {
+      const response = await fetch(`${apiUrl}/api/employees`, {
         headers: { "Authorization": "Bearer 1" }
       });
       if (response.ok) {
@@ -71,7 +71,7 @@ export default function UsersPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiUrl}/api/employees/`, {
+      const response = await fetch(`${apiUrl}/api/employees`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

@@ -46,7 +46,7 @@ export default function AssignmentsPage() {
 
   const fetchAssignments = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/assignments/`, {
+      const response = await fetch(`${apiUrl}/api/assignments`, {
         headers: { "Authorization": "Bearer 1" }
       });
       if (response.ok) {
@@ -67,7 +67,7 @@ export default function AssignmentsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiUrl}/api/assignments/`, {
+      const response = await fetch(`${apiUrl}/api/assignments`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

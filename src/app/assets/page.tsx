@@ -49,7 +49,7 @@ export default function AssetsPage() {
   // Fetch assets from the backend
   const fetchAssets = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/assets/`);
+      const response = await fetch(`${apiUrl}/api/assets`);
       if (response.ok) {
         const data = await response.json();
         setAssets(data);
@@ -69,7 +69,7 @@ export default function AssetsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiUrl}/api/assets/`, {
+      const response = await fetch(`${apiUrl}/api/assets`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
