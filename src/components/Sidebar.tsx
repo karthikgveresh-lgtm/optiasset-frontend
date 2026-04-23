@@ -9,12 +9,13 @@ import {
   Users, 
   ClipboardList, 
   Settings,
-  ShieldCheck
+  ShieldCheck,
+  LogOut
 } from "lucide-react";
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const { role } = useAuth();
+  const { role, logout } = useAuth();
 
   const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["Admin", "Employee"] },
@@ -55,14 +56,22 @@ const Sidebar = () => {
       </nav>
 
       <div className="border-t border-white/5 p-4 bg-white/5">
-        <div className="flex items-center gap-3 px-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 font-bold text-xs">
-            {role[0]}
+        <div className="flex items-center justify-between gap-3 px-2">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 font-bold text-xs">
+              {role[0]}
+            </div>
+            <div>
+              <p className="text-[10px] text-white/40 uppercase tracking-widest font-black">{role}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-bold text-white">Logged in as:</p>
-            <p className="text-[10px] text-white/40 uppercase tracking-widest font-black">{role}</p>
-          </div>
+          <button 
+            onClick={logout}
+            className="p-2 hover:bg-white/10 rounded-lg transition-colors group"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4 text-white/40 group-hover:text-red-400" />
+          </button>
         </div>
       </div>
     </div>
