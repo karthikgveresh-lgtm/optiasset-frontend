@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Lock, User, Laptop, AlertCircle, CheckCircle2, ArrowLeft, ShieldCheck, UserCircle } from "lucide-react";
+import { Lock, User, AlertCircle, CheckCircle2, ArrowLeft, ShieldCheck, UserCircle, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 
 export default function SignupPage() {
@@ -16,6 +16,7 @@ export default function SignupPage() {
     email: "",
     password: ""
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -26,8 +27,13 @@ export default function SignupPage() {
     setChosenRole(role);
   }, []);
 
-  let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-  apiUrl = apiUrl.replace("http://", "https://").replace(/\/$/, "");
+  const getApiUrl = () => {
+    let url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    if (url.includes("railway.app") && !url.startsWith("https://")) {
+      url = "https://" + url.replace("http://", "");
+    }
+    return url.replace(/\/$/, "");
+  };
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +41,7 @@ export default function SignupPage() {
     setError("");
     
     try {
+      const apiUrl = getApiUrl();
       const response = await fetch(`${apiUrl}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -49,7 +56,7 @@ export default function SignupPage() {
         setError(errData.detail || "Registration failed");
       }
     } catch (err) {
-      setError("Server connection failed.");
+      setError("Connection failed.");
     } finally {
       setIsLoading(false);
     }
@@ -68,81 +75,88 @@ export default function SignupPage() {
           </Button>
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
             {chosenRole === 'Admin' ? <ShieldCheck className="w-3 h-3 text-blue-400" /> : <UserCircle className="w-3 h-3 text-purple-400" />}
-            <span className="text-[10px] font-black uppercase tracking-widest">Enrolling as {chosenRole}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest italic">New {chosenRole}</span>
           </div>
         </div>
 
-        <CardHeader className="space-y-1 text-center pt-0">
-          <CardTitle className="text-3xl font-black tracking-tighter uppercase italic">Enrollment</CardTitle>
-          <CardDescription className="text-white/50">Registering new credentials in system</CardDescription>
+        <CardHeader className="space-y-1 text-center pt-0 pb-6">
+          <CardTitle className="text-3xl font-black tracking-tighter uppercase italic">ENROLLMENT</CardTitle>
+          <CardDescription className="text-white/40 text-[10px] font-black uppercase tracking-widest italic">Registering System Identity</CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-4 pb-8">
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg flex items-center gap-2 text-xs font-bold uppercase">
-              <AlertCircle className="w-4 h-4" /> {error}
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+              <AlertCircle className="w-4 h-4 shrink-0" /> {error}
             </div>
           )}
 
           {success && (
-            <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-3 rounded-lg flex items-center gap-2 text-xs font-bold uppercase">
-              <CheckCircle2 className="w-4 h-4" /> Success! Redirecting to login...
+            <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-3 rounded-lg flex items-center gap-2 text-[10px] font-black uppercase tracking-widest">
+              <CheckCircle2 className="w-4 h-4 shrink-0" /> Enrollment Success // Redirecting...
             </div>
           )}
 
           <form onSubmit={handleSignup} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <Input
-                placeholder="First Name"
+                placeholder="FIRST NAME"
                 required
                 value={formData.first_name}
                 onChange={(e) => setFormData({...formData, first_name: e.target.value})}
-                className="bg-white/5 border-white/10 h-11"
+                className="bg-white/5 border-white/10 h-12 text-xs font-bold uppercase tracking-widest"
               />
               <Input
-                placeholder="Last Name"
+                placeholder="LAST NAME"
                 required
                 value={formData.last_name}
                 onChange={(e) => setFormData({...formData, last_name: e.target.value})}
-                className="bg-white/5 border-white/10 h-11"
+                className="bg-white/5 border-white/10 h-12 text-xs font-bold uppercase tracking-widest"
               />
             </div>
             
             <div className="relative">
-              <User className="absolute left-3 top-3 h-4 w-4 text-white/30" />
+              <User className="absolute left-3 top-3.5 h-4 w-4 text-white/30" />
               <Input
                 type="email"
-                placeholder="Email Address"
+                placeholder="EMAIL ADDRESS"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
-                className="bg-white/5 border-white/10 pl-10 h-11"
+                className="bg-white/5 border-white/10 pl-10 h-12 text-xs font-bold uppercase tracking-widest"
               />
             </div>
             
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-white/30" />
+              <Lock className="absolute left-3 top-3.5 h-4 w-4 text-white/30" />
               <Input
-                type="password"
-                placeholder="Password"
+                type={showPassword ? "text" : "password"}
+                placeholder="CHOOSE PASSWORD"
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
-                className="bg-white/5 border-white/10 pl-10 h-11"
+                className="bg-white/5 border-white/10 pl-10 pr-10 h-12 text-xs font-bold uppercase tracking-widest"
               />
+              <button 
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3.5 text-white/30 hover:text-white transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
 
             <Button 
               type="submit" 
               disabled={isLoading || success}
-              className={`w-full h-11 text-black font-black uppercase tracking-widest transition-all ${chosenRole === 'Admin' ? 'bg-blue-400 hover:bg-blue-300' : 'bg-purple-400 hover:bg-purple-300'}`}
+              className={`w-full h-12 text-black font-black uppercase tracking-[0.2em] transition-all text-xs ${chosenRole === 'Admin' ? 'bg-blue-400 hover:bg-blue-300' : 'bg-purple-400 hover:bg-purple-300'}`}
             >
-              {isLoading ? "Enrolling..." : `Create ${chosenRole} Account`}
+              {isLoading ? "ENROLLING..." : `CREATE ${chosenRole} ACCOUNT`}
             </Button>
           </form>
 
-          <div className="text-center text-[10px] text-white/20 uppercase font-black tracking-widest">
-            Security Clearance Pending Approval
+          <div className="text-center text-[9px] text-white/20 uppercase font-black tracking-[0.3em] italic pt-4">
+            Security Clearance Level 1 // Pending Approval
           </div>
         </CardContent>
       </Card>

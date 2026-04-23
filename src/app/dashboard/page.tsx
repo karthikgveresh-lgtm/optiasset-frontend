@@ -38,18 +38,26 @@ export default function DashboardPage() {
   });
   const [recentAssignments, setRecentAssignments] = useState<RecentAssignment[]>([]);
 
+  // FORCE SECURE HTTPS URL
+  const getApiUrl = () => {
+    let url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    if (url.includes("railway.app") && !url.startsWith("https://")) {
+      url = "https://" + url.replace("http://", "");
+    }
+    return url.replace(/\/$/, "");
+  };
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-        apiUrl = apiUrl.replace("http://", "https://").replace(/\/$/, "");
+        const apiUrl = getApiUrl();
 
         // Fetch Stats
-        const statsRes = await fetch(`${apiUrl}/api/dashboard/stats/`);
+        const statsRes = await fetch(`${apiUrl}/api/dashboard/stats`);
         if (statsRes.ok) setStats(await statsRes.json());
 
         // Fetch Recent Assignments
-        const recentRes = await fetch(`${apiUrl}/api/dashboard/recent-assignments/`);
+        const recentRes = await fetch(`${apiUrl}/api/dashboard/recent-assignments`);
         if (recentRes.ok) setRecentAssignments(await recentRes.json());
 
       } catch (error) {
@@ -69,13 +77,12 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8 pb-12">
-      {/* Top Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-4xl font-black tracking-tighter text-white italic uppercase">
             {role} <span className="text-white/20 font-light not-italic">Dashboard</span>
           </h1>
-          <p className="text-white/40 text-xs font-bold uppercase tracking-[0.3em] mt-1 italic">Real-time Terminal Activity</p>
+          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] mt-1 italic">Real-time Terminal Activity</p>
         </div>
         
         <div className="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
@@ -88,7 +95,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
           <div key={card.title} className={`group relative bg-black/20 backdrop-blur-xl border border-white/5 p-6 rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:border-white/20 shadow-2xl`}>
@@ -106,7 +112,6 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Recent Assignments Table Section */}
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-white/5 rounded-lg border border-white/10">
@@ -142,7 +147,7 @@ export default function DashboardPage() {
                   </td>
                   <td className="px-6 py-5">
                     <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${
-                      item.status === 'Active' ? 'bg-green-500/10 border-green-500/20 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.1)]' :
+                      item.status === 'Active' || item.status === 'DEPLOYED' ? 'bg-green-500/10 border-green-500/20 text-green-400 shadow-[0_0_10px_rgba(34,197,94,0.1)]' :
                       item.status === 'Pending' ? 'bg-orange-500/10 border-orange-500/20 text-orange-400 shadow-[0_0_10px_rgba(249,115,22,0.1)]' :
                       'bg-red-500/10 border-red-500/20 text-red-400 shadow-[0_0_10px_rgba(239,68,68,0.1)]'
                     }`}>
@@ -151,13 +156,6 @@ export default function DashboardPage() {
                   </td>
                 </tr>
               ))}
-              {recentAssignments.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-white/20 italic font-medium">
-                    No recent transactions detected in system logs
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
