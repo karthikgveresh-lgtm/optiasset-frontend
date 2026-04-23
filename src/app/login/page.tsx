@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Lock, User, Laptop, AlertCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -108,8 +109,11 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="relative py-2 text-center text-[10px] text-white/20 uppercase tracking-widest font-black">
-            System Security Enabled
+          <div className="text-center text-sm text-white/40">
+            Don't have an account?{" "}
+            <Link href="/signup" className="text-blue-400 hover:underline font-bold">
+              Sign Up
+            </Link>
           </div>
         </CardContent>
       </Card>
