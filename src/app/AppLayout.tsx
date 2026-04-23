@@ -8,12 +8,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   const pathname = usePathname();
 
-  // If we are on the login page, just show the content (no sidebar)
-  if (pathname === "/login") {
+  // Whitelist pages that don't need a sidebar or authentication
+  const isAuthPage = pathname === "/login" || pathname === "/signup";
+
+  if (isAuthPage) {
     return <main className="w-full min-h-screen">{children}</main>;
   }
 
-  // If not authenticated and not on login page, show nothing (Context will redirect)
+  // If not authenticated and not on an auth page, show nothing (Context will redirect)
   if (!isAuthenticated) {
     return <div className="h-screen bg-black" />; 
   }
