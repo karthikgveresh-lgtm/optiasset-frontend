@@ -35,7 +35,9 @@ export default function MyGearPage() {
         let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
         apiUrl = apiUrl.replace("http://", "https://").replace(/\/$/, "");
 
-        const response = await fetch(`${apiUrl}/api/dashboard/personal-assignments/${userId}/`);
+        // Removed the trailing slash to match the new backend routes
+        const response = await fetch(`${apiUrl}/api/dashboard/personal-assignments/${userId}`);
+        
         if (response.ok) {
           const data = await response.json();
           setGear(data);
@@ -95,7 +97,7 @@ export default function MyGearPage() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-white/40">
                     <Calendar className="w-3 h-3" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest">Assigned: {item.assigned_date?.split('T')[0] || "N/A"}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Assigned: {item.assigned_date}</span>
                   </div>
                   <div className="flex items-center gap-2 text-green-500/80">
                     <ShieldCheck className="w-3 h-3" />
