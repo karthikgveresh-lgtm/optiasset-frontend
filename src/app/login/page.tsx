@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Lock, User, Laptop, AlertCircle, ShieldCheck, UserCircle, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // Added missing import
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -39,7 +40,6 @@ export default function LoginPage() {
 
       if (response.ok) {
         const data = await response.json();
-        // PASS THE USER ID to the context
         login(data.role as any, data.id);
       } else if (response.status === 401) {
         setError("Account not found. Click 'Join System' below to register.");
@@ -92,7 +92,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-white/5 border-white/10 pl-10 h-11"
+                  className="bg-white/5 border-white/10 pl-10 h-11 focus:ring-white/20"
                 />
               </div>
             </div>
@@ -106,7 +106,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-white/5 border-white/10 pl-10 h-11"
+                  className="bg-white/5 border-white/10 pl-10 h-11 focus:ring-white/20"
                 />
               </div>
             </div>
