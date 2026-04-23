@@ -9,7 +9,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   // Whitelist pages that don't need a sidebar or authentication
-  const isAuthPage = pathname === "/login" || pathname === "/signup";
+  const isAuthPage = pathname === "/login" || pathname === "/signup" || pathname === "/";
 
   if (isAuthPage) {
     return <main className="w-full min-h-screen">{children}</main>;
