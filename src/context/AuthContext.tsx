@@ -7,7 +7,6 @@ type Role = "Admin" | "Employee";
 
 interface AuthContextType {
   role: Role;
-  setRole: (role: Role) => void; // Added back for view switching
   isAuthenticated: boolean;
   login: (role: Role) => void;
   logout: () => void;
@@ -22,7 +21,7 @@ const ROLE_PERMISSIONS: Record<Role, string[]> = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [role, setRoleState] = useState<Role>("Admin");
+  const [role, setRoleState] = useState<Role>("Employee");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -34,10 +33,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (savedAuth === "true" && savedRole) {
       setIsAuthenticated(true);
       setRoleState(savedRole);
-    } else if (pathname !== "/login" && pathname !== "/signup") {
-      router.push("/login");
+    } else if (pathname !== "/login" && pathname !== "/signup" && pathname !== "/") {
+      router.push("/");
     }
-  }, []);
+  }, [pathname]);
 
   const login = (selectedRole: Role) => {
     setIsAuthenticated(true);
@@ -51,18 +50,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthenticated(false);
     localStorage.removeItem("optiasset_auth");
     localStorage.removeItem("optiasset_role");
-    router.push("/login");
-  };
-
-  const setRole = (newRole: Role) => {
-    setRoleState(newRole);
-    localStorage.setItem("optiasset_role", newRole);
+    router.push("/");
   };
 
   return (
     <AuthContext.Provider value={{ 
       role, 
-      setRole,
       isAuthenticated, 
       login, 
       logout, 

@@ -18,7 +18,7 @@ interface DashboardStats {
 }
 
 export default function DashboardPage() {
-  const { role, setRole } = useAuth();
+  const { role } = useAuth();
   const [stats, setStats] = useState<DashboardStats>({
     total_assets: 0,
     assigned_assets: 0,
@@ -59,21 +59,17 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard</h1>
+        <h1 className="text-4xl font-black tracking-tighter text-white italic uppercase">
+          {role} <span className="text-white/20 font-light not-italic">Dashboard</span>
+        </h1>
         
-        <div className="flex items-center gap-2 rounded-lg bg-black/20 backdrop-blur-md p-1 border border-white/10">
-          <button 
-            onClick={() => setRole("Admin")}
-            className={`rounded px-3 py-1 text-xs font-bold transition-all ${role === "Admin" ? "bg-white text-black shadow-lg" : "text-white/60 hover:text-white"}`}
-          >
-            Admin Mode
-          </button>
-          <button 
-            onClick={() => setRole("Employee")}
-            className={`rounded px-3 py-1 text-xs font-bold transition-all ${role === "Employee" ? "bg-white text-black shadow-lg" : "text-white/60 hover:text-white"}`}
-          >
-            Employee Mode
-          </button>
+        <div className="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full animate-pulse ${role === 'Admin' ? 'bg-blue-500 shadow-[0_0_10px_#3b82f6]' : 'bg-purple-500 shadow-[0_0_10px_#a855f7]'}`} />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">
+              System Secure <span className="text-white">// {role} Mode</span>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -81,12 +77,12 @@ export default function DashboardPage() {
         {statCards.map((card) => (
           <Card key={card.title} className={`bg-black/20 backdrop-blur-md border-t-4 ${card.color} border-x-white/5 border-b-white/5 text-white shadow-2xl`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium opacity-80">{card.title}</CardTitle>
-              <card.icon className="h-4 w-4 text-white/60" />
+              <CardTitle className="text-sm font-medium opacity-80 uppercase tracking-widest">{card.title}</CardTitle>
+              <card.icon className="h-4 w-4 text-white/40" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold">{card.value}</div>
-              <p className="text-xs opacity-60">{card.description}</p>
+              <div className="text-3xl font-black">{card.value}</div>
+              <p className="text-xs opacity-40 font-bold uppercase tracking-tight mt-1">{card.description}</p>
             </CardContent>
           </Card>
         ))}
