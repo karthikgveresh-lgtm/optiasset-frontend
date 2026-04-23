@@ -5,37 +5,49 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ShieldCheck, Lock, User, Laptop } from "lucide-react";
+import { Lock, User, Laptop, AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  apiUrl = apiUrl.replace("http://", "https://").replace(/\/$/, "");
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError("");
     
-    // Simulate API delay
-    setTimeout(() => {
-      // Simple logic: if email contains "admin", log in as Admin. Otherwise, Employee.
-      if (email.toLowerCase().includes("admin")) {
-        login("Admin");
+    try {
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        login(data.role as any);
       } else {
-        login("Employee");
+        const errData = await response.json();
+        setError(errData.detail || "Invalid credentials");
       }
+    } catch (err) {
+      setError("Server connection failed. Try again.");
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-transparent">
-      {/* Cinematic Overlay */}
       <div className="absolute inset-0 bg-black/40 pointer-events-none" />
       
       <Card className="w-full max-w-[400px] bg-black/20 backdrop-blur-2xl border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] text-white relative z-10 overflow-hidden">
-        {/* Top Accent Line */}
         <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 animate-gradient-x" />
         
         <CardHeader className="space-y-1 pt-8 pb-6 text-center">
@@ -51,6 +63,13 @@ export default function LoginPage() {
         </CardHeader>
         
         <CardContent className="space-y-4 pb-8">
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg flex items-center gap-2 text-sm">
+              <AlertCircle className="w-4 h-4" />
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
               <div className="relative">
@@ -61,7 +80,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-white/5 border-white/10 pl-10 h-11 focus:ring-blue-500 focus:border-blue-500"
+                  className="bg-white/5 border-white/10 pl-10 h-11 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -75,7 +94,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-white/5 border-white/10 pl-10 h-11 focus:ring-blue-500 focus:border-blue-500"
+                  className="bg-white/5 border-white/10 pl-10 h-11 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -83,44 +102,17 @@ export default function LoginPage() {
             <Button 
               type="submit" 
               disabled={isLoading}
-              className="w-full h-11 bg-white text-black font-bold hover:bg-white/90 transition-all duration-300 shadow-xl"
+              className="w-full h-11 bg-white text-black font-bold hover:bg-white/90 transition-all duration-300"
             >
               {isLoading ? "Authenticating..." : "Sign In"}
             </Button>
           </form>
 
-          <div className="relative py-2">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-white/10" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-transparent px-2 text-white/30">Mock Access for Testing</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <Button 
-              variant="outline" 
-              onClick={() => login("Admin")}
-              className="border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white text-xs h-9"
-            >
-              Demo Admin
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => login("Employee")}
-              className="border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white text-xs h-9"
-            >
-              Demo Employee
-            </Button>
+          <div className="relative py-2 text-center text-[10px] text-white/20 uppercase tracking-widest font-black">
+            System Security Enabled
           </div>
         </CardContent>
       </Card>
-
-      {/* Footer Info */}
-      <p className="absolute bottom-8 text-white/20 text-[10px] uppercase tracking-[0.2em] font-bold">
-        Secure Industrial Terminal v1.0.4
-      </p>
     </div>
   );
 }
