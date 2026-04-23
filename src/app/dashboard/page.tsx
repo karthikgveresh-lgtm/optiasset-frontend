@@ -18,7 +18,7 @@ interface DashboardStats {
 }
 
 export default function DashboardPage() {
-  const { role, setRole } = useAuth();
+  const { role } = useAuth();
   const [stats, setStats] = useState<DashboardStats>({
     total_assets: 0,
     assigned_assets: 0,
@@ -61,19 +61,10 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard</h1>
-        <div className="flex items-center gap-2 rounded-lg bg-black/20 backdrop-blur-md p-1 border border-white/10">
-          <button 
-            onClick={() => setRole("Admin")}
-            className={`rounded px-3 py-1 text-xs font-bold transition-all ${role === "Admin" ? "bg-white text-black shadow-lg" : "text-white/60 hover:text-white"}`}
-          >
-            Admin Mode
-          </button>
-          <button 
-            onClick={() => setRole("Employee")}
-            className={`rounded px-3 py-1 text-xs font-bold transition-all ${role === "Employee" ? "bg-white text-black shadow-lg" : "text-white/60 hover:text-white"}`}
-          >
-            Employee Mode
-          </button>
+        <div className="px-4 py-1 rounded-full bg-white/5 border border-white/10">
+          <span className="text-[10px] font-black uppercase tracking-widest text-white/40">
+            Current Profile: <span className="text-white">{role}</span>
+          </span>
         </div>
       </div>
 
