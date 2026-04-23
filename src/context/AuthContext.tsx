@@ -7,6 +7,7 @@ type Role = "Admin" | "Employee";
 
 interface AuthContextType {
   role: Role;
+  setRole: (role: Role) => void; // Added back for view switching
   isAuthenticated: boolean;
   login: (role: Role) => void;
   logout: () => void;
@@ -26,7 +27,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Load auth state from localStorage on boot
   useEffect(() => {
     const savedAuth = localStorage.getItem("optiasset_auth");
     const savedRole = localStorage.getItem("optiasset_role") as Role;
@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (savedAuth === "true" && savedRole) {
       setIsAuthenticated(true);
       setRoleState(savedRole);
-    } else if (pathname !== "/login") {
+    } else if (pathname !== "/login" && pathname !== "/signup") {
       router.push("/login");
     }
   }, []);
@@ -54,9 +54,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push("/login");
   };
 
+  const setRole = (newRole: Role) => {
+    setRoleState(newRole);
+    localStorage.setItem("optiasset_role", newRole);
+  };
+
   return (
     <AuthContext.Provider value={{ 
       role, 
+      setRole,
       isAuthenticated, 
       login, 
       logout, 
