@@ -9,19 +9,19 @@ import {
   Users, 
   ClipboardList, 
   ShieldCheck,
-  LogOut
+  LogOut,
+  User
 } from "lucide-react";
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const { role, logout } = useAuth();
+  const { role, userEmail, logout } = useAuth();
 
   const menuItems = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["Admin", "Employee"] },
     { name: "Manage Inventory", href: "/assets", icon: Laptop, roles: ["Admin"] },
     { name: "All Users", href: "/users", icon: Users, roles: ["Admin"] },
     { name: "Assignments", href: "/assignments", icon: ClipboardList, roles: ["Admin"] },
-    // REMOVED "Admin" from roles to hide "My Gear" for Admin users
     { name: "My Gear", href: "/my-gear", icon: ShieldCheck, roles: ["Employee"] },
   ];
 
@@ -55,22 +55,26 @@ const Sidebar = () => {
         })}
       </nav>
 
-      <div className="border-t border-white/5 p-4 bg-white/5">
-        <div className="flex items-center justify-between gap-3 px-2">
+      <div className="border-t border-white/5 p-5 bg-white/5">
+        <div className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className={`flex h-8 w-8 items-center justify-center rounded-lg font-black text-xs ${role === 'Admin' ? 'bg-blue-500' : 'bg-purple-500'} text-white`}>
+            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-black text-sm ${role === 'Admin' ? 'bg-blue-500 shadow-blue-500/20' : 'bg-purple-500 shadow-purple-500/20'} text-white shadow-lg`}>
               {role[0]}
             </div>
-            <div>
-              <p className="text-[10px] text-white/40 uppercase tracking-[0.2em] font-black italic">{role}</p>
+            <div className="overflow-hidden">
+              <p className="text-[10px] text-white/80 font-black truncate">{userEmail || "User Session"}</p>
+              <p className={`text-[8px] font-black uppercase tracking-[0.2em] italic ${role === 'Admin' ? 'text-blue-400' : 'text-purple-400'}`}>
+                {role} Mode Active
+              </p>
             </div>
           </div>
+          
           <button 
             onClick={logout}
-            className="p-2 hover:bg-red-500/10 rounded-lg transition-colors group"
-            title="Logout"
+            className="w-full flex items-center justify-center gap-2 py-2 rounded-lg border border-white/5 text-[10px] font-black uppercase tracking-widest text-white/20 hover:text-red-400 hover:bg-red-500/5 transition-all"
           >
-            <LogOut className="w-4 h-4 text-white/20 group-hover:text-red-400" />
+            <LogOut className="w-3 h-3" />
+            Logout System
           </button>
         </div>
       </div>

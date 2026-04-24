@@ -24,7 +24,6 @@ export default function LoginPage() {
     setChosenRole(role);
   }, []);
 
-  // FORCE SECURE HTTPS URL
   const getApiUrl = () => {
     let url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
     if (url.includes("railway.app") && !url.startsWith("https://")) {
@@ -48,7 +47,8 @@ export default function LoginPage() {
 
       if (response.ok) {
         const data = await response.json();
-        login(data.role as any, data.id);
+        // PASS EMAIL TO LOGIN
+        login(data.role as any, data.id, email);
       } else {
         setError("Invalid credentials. Try again or Join System.");
       }
@@ -78,7 +78,7 @@ export default function LoginPage() {
 
         <CardHeader className="space-y-1 pt-2 pb-6 text-center">
           <CardTitle className="text-3xl font-black tracking-tighter uppercase italic">OPTI<span className="text-white/40 font-light not-italic">ASSET</span></CardTitle>
-          <CardDescription className="text-white/50 font-medium italic text-xs tracking-widest uppercase">System Initialization</CardDescription>
+          <CardDescription className="text-white/50 font-medium italic text-xs tracking-widest uppercase italic">Initialize Credentials</CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-4 pb-8">
@@ -97,7 +97,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-white/5 border-white/10 pl-10 h-12 focus:ring-1 focus:ring-white/20 text-xs font-bold uppercase tracking-widest"
+                className="bg-white/5 border-white/10 pl-10 h-12 text-xs font-bold uppercase tracking-widest"
               />
             </div>
             
@@ -109,7 +109,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-white/5 border-white/10 pl-10 pr-10 h-12 focus:ring-1 focus:ring-white/20 text-xs font-bold uppercase tracking-widest"
+                className="bg-white/5 border-white/10 pl-10 pr-10 h-12 text-xs font-bold uppercase tracking-widest"
               />
               <button 
                 type="button"

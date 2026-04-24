@@ -81,17 +81,10 @@ export default function DashboardPage() {
           <h1 className="text-4xl font-black tracking-tighter text-white italic uppercase">
             {role} <span className="text-white/20 font-light not-italic">Dashboard</span>
           </h1>
-          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] mt-1 italic">Secure Resource Monitoring</p>
+          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] mt-1 italic">Resource Monitoring</p>
         </div>
         
-        <div className="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full animate-pulse ${role === 'Admin' ? 'bg-blue-500 shadow-[0_0_10px_#3b82f6]' : 'bg-purple-500 shadow-[0_0_10px_#a855f7]'}`} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60">
-              Session Encrypted <span className="text-white">// SSL ACTIVE</span>
-            </span>
-          </div>
-        </div>
+        {/* Removed the "Session Encrypted" badge from here */}
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
