@@ -20,6 +20,7 @@ interface UserAsset {
   asset_name: string;
   asset_id: string;
   assigned_date: string;
+  status: string;
 }
 
 export default function MyGearPage() {
@@ -27,15 +28,24 @@ export default function MyGearPage() {
   const [gear, setGear] = useState<UserAsset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // MASTER SECURE URL FETCHER
+  const getApiUrl = () => {
+    let url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    if (url.includes("railway.app") && !url.startsWith("https://")) {
+      url = "https://" + url.replace("http://", "");
+    }
+    return url.replace(/\/$/, "");
+  };
+
   useEffect(() => {
     const fetchMyGear = async () => {
-      if (!userId) return;
+      if (!userId) {
+        setIsLoading(false);
+        return;
+      }
       
       try {
-        let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-        apiUrl = apiUrl.replace("http://", "https://").replace(/\/$/, "");
-
-        // Removed the trailing slash to match the new backend routes
+        const apiUrl = getApiUrl();
         const response = await fetch(`${apiUrl}/api/dashboard/personal-assignments/${userId}`);
         
         if (response.ok) {
@@ -68,7 +78,7 @@ export default function MyGearPage() {
         <h1 className="text-4xl font-black tracking-tighter text-white italic uppercase">
           MY <span className="text-white/20 font-light not-italic">GEAR</span>
         </h1>
-        <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] mt-1 italic">Personal Inventory & Assignments</p>
+        <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] mt-1 italic">Personal Inventory Terminal</p>
       </div>
 
       {isLoading ? (
@@ -97,17 +107,17 @@ export default function MyGearPage() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 text-white/40">
                     <Calendar className="w-3 h-3" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest">Assigned: {item.assigned_date}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest italic">Provisioned: {item.assigned_date}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-green-500/80">
-                    <ShieldCheck className="w-3 h-3" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Verified Asset</span>
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="w-3 h-3 text-green-500" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-green-400">STATUS: {item.status}</span>
                   </div>
                 </div>
               </div>
               
               <div className="bg-white/5 p-4 flex justify-between items-center border-t border-white/5 group-hover:bg-white/10 transition-colors">
-                <span className="text-[9px] font-black text-white/20 uppercase tracking-widest italic">Inventory Terminal // OPTI-PRO</span>
+                <span className="text-[9px] font-black text-white/20 uppercase tracking-widest italic">Terminal // SECURE_ACCESS</span>
                 <Info className="w-3 h-3 text-white/20" />
               </div>
             </Card>
@@ -118,8 +128,8 @@ export default function MyGearPage() {
           <div className="bg-white/5 p-6 rounded-full mb-6">
             <HardDrive className="w-12 h-12 text-white/10" />
           </div>
-          <h2 className="text-2xl font-black text-white/20 uppercase italic italic">No Gear Assigned</h2>
-          <p className="text-white/10 text-xs font-bold uppercase tracking-widest mt-2">Contact your administrator for equipment</p>
+          <h2 className="text-2xl font-black text-white/20 uppercase italic">No Gear Detected</h2>
+          <p className="text-white/10 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Contact Admin to initialize hardware assignments</p>
         </div>
       )}
     </div>
