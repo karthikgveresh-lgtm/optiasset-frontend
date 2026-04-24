@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Lock, User, AlertCircle, CheckCircle2, ArrowLeft, ShieldCheck, UserCircle, Eye, EyeOff } from "lucide-react";
+import { Lock, User, AlertCircle, CheckCircle2, ArrowLeft, ShieldCheck, UserCircle, Eye, EyeOff, Briefcase } from "lucide-react";
 import Link from "next/link";
 
 export default function SignupPage() {
@@ -14,7 +14,8 @@ export default function SignupPage() {
     first_name: "",
     last_name: "",
     email: "",
-    password: ""
+    password: "",
+    department: "" // Added department field
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +46,11 @@ export default function SignupPage() {
       const response = await fetch(`${apiUrl}/api/auth/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, role: chosenRole }),
+        body: JSON.stringify({ 
+          ...formData, 
+          role: chosenRole,
+          department: formData.department || "Staff" // Send department to backend
+        }),
       });
 
       if (response.ok) {
@@ -123,6 +128,18 @@ export default function SignupPage() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
+                className="bg-white/5 border-white/10 pl-10 h-12 text-xs font-bold uppercase tracking-widest"
+              />
+            </div>
+
+            {/* NEW DEPARTMENT FIELD */}
+            <div className="relative">
+              <Briefcase className="absolute left-3 top-3.5 h-4 w-4 text-white/30" />
+              <Input
+                placeholder="DEPARTMENT / ROLE (e.g. Developer, HR)"
+                required
+                value={formData.department}
+                onChange={(e) => setFormData({...formData, department: e.target.value})}
                 className="bg-white/5 border-white/10 pl-10 h-12 text-xs font-bold uppercase tracking-widest"
               />
             </div>
