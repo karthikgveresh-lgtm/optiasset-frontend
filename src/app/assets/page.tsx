@@ -6,13 +6,13 @@ import {
   Search, 
   Plus, 
   Filter, 
-  ArrowUpDown,
   MoreVertical,
   RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { secureFetch } from "@/lib/api"; // USE MASTER FETCHER
 
 interface Asset {
   id: number;
@@ -28,19 +28,10 @@ export default function AssetsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  const getApiUrl = () => {
-    let url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    if (url.includes("railway.app") && !url.startsWith("https://")) {
-      url = "https://" + url.replace("http://", "");
-    }
-    return url.replace(/\/$/, "");
-  };
-
   const fetchAssets = async () => {
     setLoading(true);
     try {
-      const apiUrl = getApiUrl();
-      const response = await fetch(`${apiUrl}/api/assets`);
+      const response = await secureFetch("/api/assets"); // SECURE CALL
       if (response.ok) {
         const data = await response.json();
         setAssets(data);
