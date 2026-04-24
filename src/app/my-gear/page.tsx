@@ -24,11 +24,10 @@ interface UserAsset {
 }
 
 export default function MyGearPage() {
-  const { userId } = useAuth();
+  const { userEmail } = useAuth(); // Using email instead of ID for better reliability
   const [gear, setGear] = useState<UserAsset[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // MASTER SECURE URL FETCHER
   const getApiUrl = () => {
     let url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
     if (url.includes("railway.app") && !url.startsWith("https://")) {
@@ -39,14 +38,15 @@ export default function MyGearPage() {
 
   useEffect(() => {
     const fetchMyGear = async () => {
-      if (!userId) {
-        setIsLoading(false);
+      if (!userEmail) {
+        // If no email is found yet, keep loading or wait
         return;
       }
       
       try {
         const apiUrl = getApiUrl();
-        const response = await fetch(`${apiUrl}/api/dashboard/personal-assignments/${userId}`);
+        // Using userEmail here makes it bulletproof against database ID resets
+        const response = await fetch(`${apiUrl}/api/dashboard/personal-assignments/${userEmail}`);
         
         if (response.ok) {
           const data = await response.json();
@@ -60,7 +60,7 @@ export default function MyGearPage() {
     };
 
     fetchMyGear();
-  }, [userId]);
+  }, [userEmail]);
 
   const getIcon = (name: string) => {
     const n = name.toLowerCase();
@@ -129,7 +129,7 @@ export default function MyGearPage() {
             <HardDrive className="w-12 h-12 text-white/10" />
           </div>
           <h2 className="text-2xl font-black text-white/20 uppercase italic">No Gear Detected</h2>
-          <p className="text-white/10 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Contact Admin to initialize hardware assignments</p>
+          <p className="text-white/10 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Assignments pending for {userEmail}</p>
         </div>
       )}
     </div>
